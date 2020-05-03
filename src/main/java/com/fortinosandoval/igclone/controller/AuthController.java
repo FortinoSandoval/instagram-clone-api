@@ -11,7 +11,6 @@ import com.fortinosandoval.igclone.payload.request.SignupRequest;
 import com.fortinosandoval.igclone.payload.response.JwtResponse;
 import com.fortinosandoval.igclone.payload.response.MessageResponse;
 import com.fortinosandoval.igclone.service.impl.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,22 +27,21 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("authentication")
-@CrossOrigin
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
